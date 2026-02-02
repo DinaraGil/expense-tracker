@@ -1,12 +1,10 @@
-/*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"fmt"
 	"log"
 
+	"github.com/DinaraGil/expense-tracker/internal/service"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +27,7 @@ var addExpenseCmd = &cobra.Command{
 		if amount <= 0 {
 			log.Fatal("amount should be positive")
 		}
-		msg, err := addToFile(description, amount)
+		msg, err := service.AddToFile(description, amount)
 		if err != nil {
 			log.Fatal(err)
 		} else {
