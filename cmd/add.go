@@ -11,7 +11,7 @@ import (
 // addExpenseCmd represents the addExpense command
 var addExpenseCmd = &cobra.Command{
 	Use:   "add",
-	Short: "A brief description of your command",
+	Short: "command add ",
 	Run: func(cmd *cobra.Command, args []string) {
 		description, err := cmd.Flags().GetString("description")
 		if err != nil {
