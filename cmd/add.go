@@ -27,7 +27,7 @@ var addExpenseCmd = &cobra.Command{
 		if amount <= 0 {
 			log.Fatal("amount should be positive")
 		}
-		msg, err := service.AddToFile(description, amount)
+		msg, err := service.AddLogic(description, amount)
 		if err != nil {
 			log.Fatal(err)
 		} else {

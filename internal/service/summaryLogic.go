@@ -4,42 +4,42 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"os"
+	"strconv"
 
 	"github.com/DinaraGil/expense-tracker/internal/model"
 	"github.com/DinaraGil/expense-tracker/internal/storage"
 )
 
-func ListExpenses() (string, error) {
+func SummaryExpenses() (float64, error) {
 	path, err := storage.GetStoragePath(storage.ConstFile)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return "", err
+		return 0, err
 	}
 	file, err := os.Open(path)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
-	idx := 1
-	var result string
+	var result float64
 	for scanner.Scan() {
-		j := scanner.Text()
-		t := model.Expense{}
-		err := json.Unmarshal([]byte(j), &t)
+		// `scanner.Text()` возвращает текущий токен как строку
+		jsonLine := scanner.Text()
+		expenseStruct := model.Expense{}
+		err := json.Unmarshal([]byte(jsonLine), &expenseStruct)
 		if errors.Is(err, io.EOF) {
 			return result, nil
 		}
 		if err != nil {
-			return "", err
+			return 0, err
 		}
-		result += fmt.Sprintf("ID[%d] Date %s Description %s Amount %s\n", idx, t.Date, t.Description, t.Amount)
-		idx++
+		floatAmount, _ := strconv.ParseFloat(expenseStruct.Amount, 64)
+		result += floatAmount
 	}
 	return result, nil
 }
